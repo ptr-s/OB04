@@ -49,9 +49,74 @@
 Боец наносит удар из лука.
 Монстр побежден!
 """
+from abc import abstractmethod
+
+class Monster:
+    def __init__(self, name: str):
+        self.name = name
+        self.health = 100
+
+    def damage(self, value):
+        self.health -= value
+        if self.health < 0:
+            self.health = 0
+
+    def is_dead(self):
+        if self.health > 0:
+            print(f"Монстр '{self.name}' всё ещё жив")
+            return False
+        else:
+            print(f"Монстр '{self.name}' мёртв")
+            return True
+
+class Fighter:
+    def __init__(self, name: str):
+        self.name = name
+        self.health = 100
+        self.weapon = None
+
+    def change_weapon(self, weapon):
+        self.weapon = weapon
+        print(f"Боец выбирает {weapon.name}")
+
+    def attack(self, monster):
+        print(f"Боец '{self.name}' делает ", end='')
+        self.weapon.attack(monster)
+
+class Weapon:
+    @abstractmethod
+    def attack(self, monster):
+        pass
+
+class Sword(Weapon):
+    name = "Меч"
+    def attack(self, monster):
+        print(f"удар мечем по монстру '{monster.name}'")
+        monster.damage(100)
+
+class Bow(Weapon):
+    name = "Лук"
+    def attack(self, monster):
+        print(f"выстрел из лука по монстру '{monster.name}'")
+        monster.health -= 50
 
 def main():
-    pass
+    fighter = Fighter('Боромир')
+    weapon1 = Sword()
+    weapon2 = Bow()
+
+    monster1 = Monster('Гоблин')
+    monster2 = Monster('Орк')
+
+    # Сражение с гоблином
+    fighter.change_weapon(weapon1)
+    while not monster1.is_dead():
+        fighter.attack(monster1)
+
+    # Сражение с орком
+    fighter.change_weapon(weapon2)
+    while not monster2.is_dead():
+        fighter.attack(monster2)
 
 
 if __name__ == "__main__":
