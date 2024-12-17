@@ -49,7 +49,24 @@
 Боец наносит удар из лука.
 Монстр побежден!
 """
-from abc import abstractmethod
+from abc import ABC, abstractmethod
+
+class Weapon(ABC):
+    @abstractmethod
+    def attack(self, monster):
+        pass
+
+class Sword(Weapon):
+    name = "Меч"
+    def attack(self, monster):
+        print(f"удар мечем по монстру '{monster.name}'")
+        monster.damage(100)
+
+class Bow(Weapon):
+    name = "Лук"
+    def attack(self, monster):
+        print(f"выстрел из лука по монстру '{monster.name}'")
+        monster.health -= 50
 
 class Monster:
     def __init__(self, name: str):
@@ -82,23 +99,6 @@ class Fighter:
     def attack(self, monster):
         print(f"Боец '{self.name}' делает ", end='')
         self.weapon.attack(monster)
-
-class Weapon:
-    @abstractmethod
-    def attack(self, monster):
-        pass
-
-class Sword(Weapon):
-    name = "Меч"
-    def attack(self, monster):
-        print(f"удар мечем по монстру '{monster.name}'")
-        monster.damage(100)
-
-class Bow(Weapon):
-    name = "Лук"
-    def attack(self, monster):
-        print(f"выстрел из лука по монстру '{monster.name}'")
-        monster.health -= 50
 
 def main():
     fighter = Fighter('Боромир')
